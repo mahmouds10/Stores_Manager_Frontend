@@ -1,0 +1,424 @@
+{
+	"info": {
+		"_postman_id": "415fc945-c215-4c7f-8e2b-0fa806ccf7e6",
+		"name": "Mobile_Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32946177"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Signup",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"name\": \"Mahmoud Sayed\",\r\n        \"gender\": \"Male\",\r\n        \"email\": \"mahmoudsayed1612@gmail.com\",\r\n        \"level\": 4,\r\n        \"password\": \"Mahmoud1612\",\r\n        \"confirmPassword\": \"Mahmoud1612\"\r\n    }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{authurl}}/signup",
+							"host": [
+								"{{authurl}}"
+							],
+							"path": [
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"mahmoudsayed1612@gmail.com\",\r\n    \"password\": \"Mahmoud1612\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{authurl}}/login",
+							"host": [
+								"{{authurl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Student info",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZGI0N2Q0NGZmM2QxMjk4ZjI3YmJmOSIsImlhdCI6MTc0NTkzNTE0MCwiZXhwIjoxNzc3NDkyNzQwfQ._NmNvyfMbeiqwe1XIIXhjXCzQ9JjMmbsreZtGajrsEY",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{authurl}}/student-info/20210370",
+							"host": [
+								"{{authurl}}"
+							],
+							"path": [
+								"student-info",
+								"20210370"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update info",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZGI0N2Q0NGZmM2QxMjk4ZjI3YmJmOSIsImlhdCI6MTc0NTkzNTE0MCwiZXhwIjoxNzc3NDkyNzQwfQ._NmNvyfMbeiqwe1XIIXhjXCzQ9JjMmbsreZtGajrsEY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Mahmoud Sayed Abdel'aty\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{authurl}}/update-profile",
+							"host": [
+								"{{authurl}}"
+							],
+							"path": [
+								"update-profile"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Stores",
+			"item": [
+				{
+					"name": "Add Store",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\"name\": \"Abou El Sid\", \"latitude\": 30.0386, \"longitude\": 31.2221, \"type\": \"restaurant\"},\r\n    {\"name\": \"Abou Tarek\", \"latitude\": 30.0491, \"longitude\": 31.2365, \"type\": \"restaurant\"},\r\n    {\"name\": \"Zooba\", \"latitude\": 30.0602, \"longitude\": 31.2198, \"type\": \"restaurant\"},\r\n    {\"name\": \"Felfela\", \"latitude\": 30.0478, \"longitude\": 31.2398, \"type\": \"restaurant\"},\r\n    {\"name\": \"Naguib Mahfouz Cafe\", \"latitude\": 30.0475, \"longitude\": 31.2623, \"type\": \"cafe\"},\r\n    {\"name\": \"Khufu’s\", \"latitude\": 29.9921, \"longitude\": 31.1294, \"type\": \"restaurant\"},\r\n    {\"name\": \"9 Pyramids Lounge\", \"latitude\": 29.9925, \"longitude\": 31.1287, \"type\": \"restaurant\"},\r\n    {\"name\": \"Crimson\", \"latitude\": 30.0621, \"longitude\": 31.2165, \"type\": \"restaurant\"},\r\n    {\"name\": \"Fasahet Somia\", \"latitude\": 30.0465, \"longitude\": 31.2423, \"type\": \"restaurant\"},\r\n    {\"name\": \"El Fishawi Cafe\", \"latitude\": 30.0477, \"longitude\": 31.2625, \"type\": \"cafe\"},\r\n    {\"name\": \"Kebabgy\", \"latitude\": 30.0642, \"longitude\": 31.2148, \"type\": \"restaurant\"},\r\n    {\"name\": \"Teatro\", \"latitude\": 30.0201, \"longitude\": 31.2087, \"type\": \"restaurant\"},\r\n    {\"name\": \"Carlo’s\", \"latitude\": 30.0388, \"longitude\": 31.2223, \"type\": \"restaurant\"},\r\n    {\"name\": \"L’Asiatique\", \"latitude\": 30.0389, \"longitude\": 31.2224, \"type\": \"restaurant\"},\r\n    {\"name\": \"Pier 88\", \"latitude\": 30.0645, \"longitude\": 31.2152, \"type\": \"restaurant\"},\r\n    {\"name\": \"Hawawshi El Rabie\", \"latitude\": 30.0753, \"longitude\": 31.2102, \"type\": \"restaurant\"},\r\n    {\"name\": \"Andrea El Mariouteya\", \"latitude\": 29.9795, \"longitude\": 31.1342, \"type\": \"restaurant\"},\r\n    {\"name\": \"Bab Al Qasr\", \"latitude\": 30.1042, \"longitude\": 31.3421, \"type\": \"restaurant\"},\r\n    {\"name\": \"Nile 49 Restaurant\", \"latitude\": 30.0758, \"longitude\": 31.2278, \"type\": \"restaurant\"},\r\n    {\"name\": \"Sea Salt Bakery\", \"latitude\": 30.0605, \"longitude\": 31.2195, \"type\": \"cafe\"},\r\n    {\"name\": \"Al A’hd al Gadeed\", \"latitude\": 30.0468, \"longitude\": 31.2425, \"type\": \"restaurant\"},\r\n    {\"name\": \"Simond’s Bakery\", \"latitude\": 30.0612, \"longitude\": 31.2189, \"type\": \"cafe\"},\r\n    {\"name\": \"El Malky\", \"latitude\": 30.0482, \"longitude\": 31.2415, \"type\": \"cafe\"},\r\n    {\"name\": \"Ratios Bakery\", \"latitude\": 30.0165, \"longitude\": 31.1987, \"type\": \"cafe\"},\r\n    {\"name\": \"Seecoz\", \"latitude\": 30.0618, \"longitude\": 31.2175, \"type\": \"restaurant\"}\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{storesurl}}/add-store",
+							"host": [
+								"{{storesurl}}"
+							],
+							"path": [
+								"add-store"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Stores",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{storesurl}}/get-all-stores",
+							"host": [
+								"{{storesurl}}"
+							],
+							"path": [
+								"get-all-stores"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Stores Per Product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{storesurl}}/stores-for-product/6814d21569e1b65d47ccc11e",
+							"host": [
+								"{{storesurl}}"
+							],
+							"path": [
+								"stores-for-product",
+								"6814d21569e1b65d47ccc11e"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Add Product",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{productsurl}}/add-product",
+							"host": [
+								"{{productsurl}}"
+							],
+							"path": [
+								"add-product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Product Photo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "productId",
+									"value": "Atayef",
+									"type": "text"
+								},
+								{
+									"key": "productPhoto",
+									"type": "file",
+									"src": "/C:/Users/mahmo/Downloads/images (5).jpeg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{productsurl}}/add-product-photo",
+							"host": [
+								"{{productsurl}}"
+							],
+							"path": [
+								"add-product-photo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{productsurl}}/get-products",
+							"host": [
+								"{{productsurl}}"
+							],
+							"path": [
+								"get-products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Products Per Store",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{productsurl}}/products-per-store/6814b9897518b1c6bc3527ed",
+							"host": [
+								"{{productsurl}}"
+							],
+							"path": [
+								"products-per-store",
+								"6814b9897518b1c6bc3527ed"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseurl",
+			"value": "http://localhost:3000/api",
+			"type": "string"
+		},
+		{
+			"key": "authurl",
+			"value": "{{baseurl}}/auth",
+			"type": "string"
+		},
+		{
+			"key": "storesurl",
+			"value": "{{baseurl}}/stores",
+			"type": "string"
+		},
+		{
+			"key": "productsurl",
+			"value": "{{baseurl}}/products",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
