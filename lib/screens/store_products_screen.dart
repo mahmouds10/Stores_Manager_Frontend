@@ -79,6 +79,8 @@ class _StoreProductsScreenState extends State<StoreProductsScreen> {
   }
 
   Widget _buildProductCard(ProductModel product) {
+    final imageUrl = product.productPhoto?.url;
+
     return Card(
       elevation: 3,
       margin: const EdgeInsets.only(bottom: 16),
@@ -90,11 +92,11 @@ class _StoreProductsScreenState extends State<StoreProductsScreen> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (product.imageUrl != null)
+            if (imageUrl != null)
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(
-                  product.imageUrl!,
+                  imageUrl,
                   width: 80,
                   height: 80,
                   fit: BoxFit.cover,
@@ -148,7 +150,7 @@ class _StoreProductsScreenState extends State<StoreProductsScreen> {
                   if (product.price != null) ...[
                     const SizedBox(height: 8),
                     Text(
-                      '\$${product.price!.toStringAsFixed(2)}',
+                      '${product.price!.toStringAsFixed(2)} EGP',
                       style: TextStyle(
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.bold,
@@ -164,4 +166,5 @@ class _StoreProductsScreenState extends State<StoreProductsScreen> {
       ),
     );
   }
+
 }
