@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile_frontend/cubits/product/product_cubit.dart';
+import 'package:mobile_frontend/cubits/store/store_cubit.dart';
+import 'package:mobile_frontend/services/product_service.dart';
+import 'package:mobile_frontend/services/store_service.dart';
 import 'app.dart';
 
 // Services
@@ -19,8 +23,8 @@ void main() {
     MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => AuthCubit(AuthService())),
-        // BlocProvider(create: (_) => StoreCubit(StoreService())),
-        // BlocProvider(create: (_) => ProductCubit(ProductService())),
+        BlocProvider(create: (_) => StoreCubit(StoreService())),
+        BlocProvider(create: (_) => ProductCubit(ProductService())),
         // BlocProvider(create: (_) => SearchCubit(SearchService())),
       ],
       child: const MyApp(),
