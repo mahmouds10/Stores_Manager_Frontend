@@ -4,6 +4,7 @@ import '../cubits/store/store_cubit.dart';
 import '../cubits/store/store_state.dart';
 import '../models/store_model.dart';
 import 'store_products_screen.dart';
+import 'product_search_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,40 +23,74 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Stores'),
       ),
       drawer: Drawer(
-        child: ListView(
-          children: [
-            const DrawerHeader(child: Text('Menu')),
-            // ListTile(
-            //   leading: const Icon(Icons.favorite),
-            //   title: const Text('Loved Stores'),
-            //   onTap: () {
-            //     Navigator.pop(context);
-            //     Navigator.pushNamed(context, '/favorites');
-            //   },
-            // ),
-            ListTile(
-              leading: const Icon(Icons.search),
-              title: const Text('Search Products'),
-              onTap: () {
-                Navigator.pop(context);
-                // Navigate to product search screen when implemented
-                // Navigator.pushNamed(context, '/search-products');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Logout'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushReplacementNamed(context, '/login');
-              },
-            ),
-          ],
+        child: Container(
+          color: theme.colorScheme.background,
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              UserAccountsDrawerHeader(
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary,
+                ),
+                accountName: const Text('Welcome', style: TextStyle(fontWeight: FontWeight.bold)),
+                accountEmail: const Text('Browse and search products'),
+              ),
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: Material(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(12),
+                  child: ListTile(
+                    leading: const Icon(Icons.search, color: Colors.teal),
+                    title: const Text('Search Products', style: TextStyle(fontWeight: FontWeight.w500)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    hoverColor: Colors.teal.withOpacity(0.08),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/search-products');
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 4),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: Material(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(12),
+                  child: ListTile(
+                    leading: const Icon(Icons.logout, color: Colors.redAccent),
+                    title: const Text('Logout', style: TextStyle(fontWeight: FontWeight.w500)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    hoverColor: Colors.redAccent.withOpacity(0.08),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushReplacementNamed(context, '/login');
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Divider(thickness: 1, indent: 16, endIndent: 16),
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  'Powered by FCAI Mobile Project',
+                  style: TextStyle(color: Colors.grey[500], fontSize: 13),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
         ),
       ),
       body: SafeArea(
