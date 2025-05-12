@@ -23,12 +23,36 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
   Position? userPosition;
   String? locationError;
   bool isGettingLocation = false;
+  
+  // Add for search functionality
+  final TextEditingController _searchController = TextEditingController();
+  List<ProductModel> _filteredProducts = [];
+  List<ProductModel> _allProducts = [];
 
   @override
   void initState() {
     super.initState();
     context.read<ProductCubit>().loadAllProducts();
     _getUserLocation();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    setState(() {
+      _filteredProducts = _allProducts
+          .where((product) => product.name.toLowerCase().startsWith(_searchController.text.toLowerCase()))
+          .toList();
+      // Reset selected product if it is not in the filtered list
+      if (selectedProduct != null && !_filteredProducts.contains(selectedProduct)) {
+        selectedProduct = null;
+      }
+    });
   }
 
   Future<void> _getUserLocation() async {
@@ -119,7 +143,14 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
               ),
             );
           } else if (productState is ProductLoaded) {
-            return _buildProductDropdown(productState.products, theme);
+            // Store all products and filter if first time
+            if (_allProducts.isEmpty || _allProducts.length != productState.products.length) {
+              _allProducts = productState.products;
+              _filteredProducts = _allProducts
+                  .where((product) => product.name.toLowerCase().startsWith(_searchController.text.toLowerCase()))
+                  .toList();
+            }
+            return _buildProductList(_filteredProducts, theme);
           }
           return const Center(child: Text('No products available.'));
         },
@@ -128,95 +159,107 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
     );
   }
 
-  Widget _buildProductDropdown(List<ProductModel> products, ThemeData theme) {
+  Widget _buildProductList(List<ProductModel> products, ThemeData theme) {
+    // If a product is selected, show only the restaurant/store list or map, filling the screen
+    if (selectedProduct != null) {
+      return BlocBuilder<StoreCubit, StoreState>(
+        builder: (context, storeState) {
+          if (storeState is StoreLoading) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 16),
+                  Text('Loading restaurants/cafes...', style: TextStyle(fontSize: 16, color: Colors.grey)),
+                ],
+              ),
+            );
+          } else if (storeState is StoreError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, color: Colors.red, size: 48),
+                  const SizedBox(height: 12),
+                  Text(storeState.message, style: const TextStyle(color: Colors.red, fontSize: 16)),
+                ],
+              ),
+            );
+          } else if (storeState is StoreLoaded) {
+            return AnimatedSwitcher(
+              duration: const Duration(milliseconds: 350),
+              child: showMap
+                  ? _buildMapView(storeState.stores)
+                  : _buildListView(storeState.stores, theme),
+            );
+          }
+          return const Center(child: Text('No results.'));
+        },
+      );
+    }
+    // If no product is selected, show the product search and product list
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24),
       child: Column(
         children: [
-          Material(
-            elevation: 2,
-            borderRadius: BorderRadius.circular(12),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: DropdownButtonFormField<ProductModel>(
-                value: selectedProduct,
-                decoration: InputDecoration(
-                  labelText: 'Select a product',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                ),
-                items: products.map((product) {
-                  return DropdownMenuItem<ProductModel>(
-                    value: product,
-                    child: Row(
-                      children: [
-                        if (product.productPhoto?.url != null)
-                          CircleAvatar(
-                            backgroundImage: NetworkImage(product.productPhoto!.url),
-                            radius: 14,
-                          )
-                        else
-                          const CircleAvatar(
-                            backgroundColor: Colors.grey,
-                            radius: 14,
-                            child: Icon(Icons.fastfood, color: Colors.white, size: 16),
-                          ),
-                        const SizedBox(width: 10),
-                        Text(product.name, style: const TextStyle(fontSize: 16)),
-                      ],
-                    ),
-                  );
-                }).toList(),
-                onChanged: (product) {
-                  setState(() {
-                    selectedProduct = product;
-                  });
-                  if (product != null) {
-                    context.read<StoreCubit>().loadStoresForProduct(product.id);
-                  }
-                },
-              ),
+          TextField(
+            controller: _searchController,
+            decoration: InputDecoration(
+              labelText: 'Search product by name',
+              prefixIcon: Icon(Icons.search),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             ),
           ),
-          const SizedBox(height: 20),
-          if (selectedProduct != null)
-            Expanded(
-              child: BlocBuilder<StoreCubit, StoreState>(
-                builder: (context, storeState) {
-                  if (storeState is StoreLoading) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          CircularProgressIndicator(),
-                          SizedBox(height: 16),
-                          Text('Loading restaurants/cafes...', style: TextStyle(fontSize: 16, color: Colors.grey)),
-                        ],
-                      ),
-                    );
-                  } else if (storeState is StoreError) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.error_outline, color: Colors.red, size: 48),
-                          const SizedBox(height: 12),
-                          Text(storeState.message, style: const TextStyle(color: Colors.red, fontSize: 16)),
-                        ],
-                      ),
-                    );
-                  } else if (storeState is StoreLoaded) {
-                    return AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 350),
-                      child: showMap
-                          ? _buildMapView(storeState.stores)
-                          : _buildListView(storeState.stores, theme),
-                    );
-                  }
-                  return const Center(child: Text('No results.'));
-                },
-              ),
-            ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: products.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.search_off, color: Colors.grey, size: 48),
+                        SizedBox(height: 12),
+                        Text('No products found.', style: TextStyle(fontSize: 16, color: Colors.grey)),
+                      ],
+                    ),
+                  )
+                : ListView.separated(
+                    itemCount: products.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    itemBuilder: (context, index) {
+                      final product = products[index];
+                      return Card(
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                          leading: product.productPhoto?.url != null
+                              ? CircleAvatar(
+                                  backgroundImage: NetworkImage(product.productPhoto!.url),
+                                  radius: 20,
+                                )
+                              : const CircleAvatar(
+                                  backgroundColor: Colors.grey,
+                                  radius: 20,
+                                  child: Icon(Icons.fastfood, color: Colors.white, size: 20),
+                                ),
+                          title: Text(product.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
+                          subtitle: product.description != null ? Text(product.description!, maxLines: 1, overflow: TextOverflow.ellipsis) : null,
+                          onTap: () {
+                            setState(() {
+                              selectedProduct = product;
+                            });
+                            context.read<StoreCubit>().loadStoresForProduct(product.id);
+                          },
+                          selected: selectedProduct?.id == product.id,
+                          selectedTileColor: theme.colorScheme.primary.withOpacity(0.1),
+                        ),
+                      );
+                    },
+                  ),
+          ),
         ],
       ),
     );
@@ -259,8 +302,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
                 : null,
             trailing: Icon(Icons.arrow_forward_ios, color: theme.colorScheme.primary, size: 18),
             onTap: () {
-              Navigator.push(
-                context,
+              Navigator.of(context, rootNavigator: true).push(
                 MaterialPageRoute(
                   builder: (context) => StoreDirectionsScreen(
                     store: store,
@@ -303,8 +345,7 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
         position: LatLng(store.latitude, store.longitude),
         infoWindow: InfoWindow(title: store.name),
         onTap: () {
-          Navigator.push(
-            context,
+          Navigator.of(context, rootNavigator: true).push(
             MaterialPageRoute(
               builder: (context) => StoreDirectionsScreen(
                 store: store,
