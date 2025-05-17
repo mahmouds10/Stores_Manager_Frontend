@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       title: 'Cubit Auth Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.blue),
-      initialRoute: '/login',
+      initialRoute: '/',
       routes: {
         "/" : (context) => LandingScreen(),
         '/login': (context) => LoginScreen(),
