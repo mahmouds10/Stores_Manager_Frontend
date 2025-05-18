@@ -1,5 +1,5 @@
 // Base API URL
-const String baseUrl = "https://mobileproject-production.up.railway.app/api";
+const String baseUrl = "https://mobileproject-production-e2c3.up.railway.app/api";
 // const String baseUrl = "http://10.0.2.2:3000/api";
 
 // Auth Endpoints
