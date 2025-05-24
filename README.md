@@ -1,4 +1,4 @@
-# Flutter App Project Structure
+# Stores list
 
 ``` 
 lib/
